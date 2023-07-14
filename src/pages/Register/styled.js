@@ -25,3 +25,49 @@ export const Form = styled.form`
     }
   }
 `;
+
+export const Title = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    color: ${colors.primaryColor};
+  }
+`;
+
+export const Ask = styled.div``;
+
+export const Popup = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #ccc;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #999;
+    }
+  }
+`;

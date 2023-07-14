@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
 import { useSelector, useDispatch } from 'react-redux';
+import { FaTrash, FaExclamation } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { get } from 'lodash';
 
 import { Container } from '../../styles/GlobalStyles';
-import { Form } from './styled';
+import { Form, Title } from './styled';
 import Loading from '../../components/Loading';
 import * as actions from '../../store/modules/auth/actions';
+import axios from '../../services/axios';
+import history from '../../services/history';
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -14,11 +19,11 @@ export default function Register() {
   const id = useSelector((state) => state.auth.user.id);
   const nomeStored = useSelector((state) => state.auth.user.nome);
   const emailStored = useSelector((state) => state.auth.user.email);
-  const isLoading = useSelector((state) => state.auth.isLoading);
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   React.useEffect(() => {
     if (!id) return;
@@ -54,10 +59,57 @@ export default function Register() {
     dispatch(actions.registerRequest({ nome, email, password, id }));
   }
 
+  const handleDeleteAsk = (e) => {
+    e.preventDefault();
+    const exclamation = e.currentTarget.nextSibling;
+    exclamation.setAttribute('display', 'block');
+    e.currentTarget.remove();
+  };
+
+  const handleDelete = async (e) => {
+    e.persist();
+
+    try {
+      setIsLoading(true);
+      await axios.delete(`/users/`);
+      dispatch(actions.loginFailure());
+      setIsLoading(false);
+
+      toast.success('Sua conta foi excluída com sucesso');
+      history.push('/');
+    } catch (err) {
+      const status = get(err, 'response.status', 0);
+
+      if (status === 401) {
+        toast.error('Você precisa fazer login');
+      } else {
+        toast.error(
+          'Ocorreu um erro ao excluir sua conta. Por favor, tente novamente mais tarde.'
+        );
+      }
+
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container>
       <Loading isLoading={isLoading} />
-      <h1>{id ? 'Editar Dados' : 'Crie Sua Conta'}</h1>
+
+      <Title>
+        <h1>{id ? 'Editar Dados' : 'Crie Sua Conta'}</h1>
+        <div>
+          <Link onClick={handleDeleteAsk} to="/users/delete">
+            <h2> {id && <FaTrash size="18" cursor="pointer" />} </h2>
+          </Link>
+          <FaExclamation
+            display="none"
+            cursor="pointer"
+            size={18}
+            onClick={(e) => handleDelete(e)}
+          />
+        </div>
+      </Title>
 
       <Form onSubmit={(e) => handleSubmit(e)}>
         <label htmlFor="nome">
