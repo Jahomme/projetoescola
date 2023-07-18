@@ -3,10 +3,11 @@ import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { FaTrash } from 'react-icons/fa';
 import Loading from '../../components/Loading';
 
 import { Container } from '../../styles/GlobalStyles';
-import { Title, Form } from './styled';
+import { Title, Form, FotosContainer, Buttons } from './styled';
 import axios from '../../services/axios';
 import history from '../../services/history';
 import * as actions from '../../store/modules/auth/actions';
@@ -17,13 +18,20 @@ export default function Fotos({ match }) {
   const id = get(match, 'params.id', '');
   const [isLoading, setIsLoading] = React.useState(false);
   const [foto, setFoto] = React.useState('');
+  const [fotos, setFotos] = React.useState([]);
+  const [selectedFotoId, setSelectedFotoId] = React.useState(null);
 
   React.useEffect(() => {
     const getData = async () => {
       try {
         setIsLoading(true);
+
         const { data } = await axios.get(`/alunos/${id}`);
         setFoto(get(data, 'Fotos[0].url', ''));
+
+        const response = await axios.get(`/fotos/${id}`);
+        setFotos(response.data);
+
         setIsLoading(false);
       } catch {
         toast.error('Erro ao obter imagem.');
@@ -51,6 +59,10 @@ export default function Fotos({ match }) {
       await axios.post('/fotos/', formData, {
         'Content-Type': 'multipart/form-data',
       });
+
+      const response = await axios.get(`/fotos/${id}`);
+      setFotos(response.data);
+
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -62,10 +74,45 @@ export default function Fotos({ match }) {
     }
   };
 
+  // const handleReset = () => {};
+
+  const handleClick = (e, fotoId) => {
+    setSelectedFotoId(fotoId);
+    const { target } = e;
+    const parentDiv = target.closest('div');
+    const images = parentDiv.parentNode.querySelectorAll('.image');
+
+    // Remover a classe 'selected' de todas as imagens
+    images.forEach((image) => {
+      image.classList.remove('selected');
+    });
+
+    const image = parentDiv.querySelector('img');
+    image.classList.add('selected');
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+
+      await axios.delete(`/fotos/${id}/foto/${selectedFotoId}`);
+
+      const response = await axios.get(`/fotos/${id}`);
+      setFotos(response.data);
+
+      setIsLoading(false);
+      toast.success('Foto Excluída com sucesso');
+    } catch (err) {
+      setIsLoading(false);
+
+      toast.error('Erro ao excluir a foto');
+    }
+  };
+
   return (
     <Container>
       <Loading isLoading={isLoading} />
-      <Title>Fotos</Title>
+      <Title>Escolha uma nova foto principal</Title>
 
       <Form>
         <label htmlFor="foto">
@@ -73,6 +120,39 @@ export default function Fotos({ match }) {
           <input type="file" id="foto" onChange={handleChange} />
         </label>
       </Form>
+
+      <Buttons>
+        <h2>Selecione uma foto para apagar</h2>
+      </Buttons>
+      <FotosContainer>
+        {fotos.map((fotoFromArray, index) => (
+          <div key={fotoFromArray.id}>
+            <button
+              type="submit"
+              onClick={(e) => handleClick(e, fotoFromArray.id)}
+            >
+              <img
+                crossOrigin=""
+                src={fotoFromArray.url}
+                alt={`Foto ${index}`}
+                className="image"
+              />
+            </button>
+
+            {selectedFotoId === fotoFromArray.id && (
+              <div className="buttons-div">
+                <button
+                  className="button-click"
+                  type="submit"
+                  onClick={handleDelete}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+      </FotosContainer>
     </Container>
   );
 }
