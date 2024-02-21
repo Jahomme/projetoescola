@@ -27,6 +27,7 @@ export default function Fotos({ match }) {
         setIsLoading(true);
 
         const { data } = await axios.get(`/alunos/${id}`);
+
         setFoto(get(data, 'Fotos[0].url', ''));
 
         const response = await axios.get(`/fotos/${id}`);
@@ -86,7 +87,6 @@ export default function Fotos({ match }) {
     images.forEach((image) => {
       image.classList.remove('selected');
     });
-
     const image = parentDiv.querySelector('img');
     image.classList.add('selected');
   };
@@ -142,7 +142,7 @@ export default function Fotos({ match }) {
             {selectedFotoId === fotoFromArray.id && (
               <div className="buttons-div">
                 <button
-                  className="button-click"
+                  className="button-delete"
                   type="submit"
                   onClick={handleDelete}
                 >

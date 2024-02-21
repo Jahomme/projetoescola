@@ -68,12 +68,20 @@ export const FotosContainer = styled.div`
     display: flex;
     position: relative;
     top: -50%;
-    left: 30%;
+    left: 0%;
   }
 
-  .button-click {
+  .button-delete {
     width: 36px;
     height: 36px;
+    margin-left: 10px;
+    align-items: center;
+  }
+
+  .button-confirm {
+    width: 36px;
+    height: 36px;
+    margin-right: 50px;
     align-items: center;
   }
 `;
