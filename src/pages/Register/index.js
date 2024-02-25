@@ -99,10 +99,15 @@ export default function Register() {
       <Title>
         <h1>{id ? 'Editar Dados' : 'Crie Sua Conta'}</h1>
         <div>
-          <Link onClick={handleDeleteAsk} to="/users/delete">
+          <Link
+            title="Excluir Usuário"
+            onClick={handleDeleteAsk}
+            to="/users/delete"
+          >
             <h2> {id && <FaTrash size="18" cursor="pointer" />} </h2>
           </Link>
           <FaExclamation
+            title="Confirmar Exclusão"
             display="none"
             cursor="pointer"
             size={18}

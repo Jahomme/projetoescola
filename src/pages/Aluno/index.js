@@ -149,7 +149,7 @@ export default function Aluno({ match }) {
           ) : (
             <FaUserCircle size={180} />
           )}
-          <Link to={`/fotos/${id}`}>
+          <Link title="Editar Foto" to={`/fotos/${id}`}>
             <FaEdit size={24} />
           </Link>
         </ProfilePicture>
@@ -192,7 +192,9 @@ export default function Aluno({ match }) {
           placeholder="Altura"
         />
 
-        <button type="submit">{id ? 'Editar' : 'Cadastrar'}</button>
+        <button title="Cadastrar/Editar" type="submit">
+          {id ? 'Editar' : 'Cadastrar'}
+        </button>
       </Form>
     </Container>
   );

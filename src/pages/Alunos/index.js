@@ -64,7 +64,9 @@ export default function Alunos() {
       <Loading isLoading={isLoading} />
       <h1>Alunos</h1>
 
-      <NovoAluno to="/aluno">Novo aluno</NovoAluno>
+      <NovoAluno title="Cadastrar Novo Aluno" to="/aluno">
+        Novo aluno
+      </NovoAluno>
       <AlunoContainer>
         {alunos.map((aluno, index) => (
           <div key={String(aluno.id)}>
@@ -77,13 +79,18 @@ export default function Alunos() {
             </ProfilePicture>{' '}
             <span>{aluno.nome}</span>
             <span>{aluno.email}</span>
-            <Link to={`/aluno/${aluno.id}/edit`}>
+            <Link title="Editar Dados" to={`/aluno/${aluno.id}/edit`}>
               <FaEdit size={16} />
             </Link>
-            <Link onClick={handleDeleteAsk} to={`/aluno/${aluno.id}/delete`}>
+            <Link
+              title="Excluir Aluno"
+              onClick={handleDeleteAsk}
+              to={`/aluno/${aluno.id}/delete`}
+            >
               <FaWindowClose size={16} />
             </Link>
             <FaExclamation
+              title="Confirmar Exclusão"
               size={16}
               display="none"
               cursor="pointer"

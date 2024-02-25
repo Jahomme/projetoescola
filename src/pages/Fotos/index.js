@@ -115,7 +115,7 @@ export default function Fotos({ match }) {
       <Title>Escolha uma nova foto principal</Title>
 
       <Form>
-        <label htmlFor="foto">
+        <label title="Escolha Uma Nova Foto Principal" htmlFor="foto">
           {foto ? <img src={foto} alt="Foto" crossOrigin="" /> : 'Selecionar'}
           <input type="file" id="foto" onChange={handleChange} />
         </label>
@@ -133,6 +133,7 @@ export default function Fotos({ match }) {
             >
               <img
                 crossOrigin=""
+                title="Clique Para Excluir a Imagem"
                 src={fotoFromArray.url}
                 alt={`Foto ${index}`}
                 className="image"
@@ -142,6 +143,7 @@ export default function Fotos({ match }) {
             {selectedFotoId === fotoFromArray.id && (
               <div className="buttons-div">
                 <button
+                  title="Clique Novamente Para Confirmar Exclusão"
                   className="button-delete"
                   type="submit"
                   onClick={handleDelete}
